@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>公式复制工具</title>
+    <style>
+        body {
+            background-color: #2e2e2e;
+            color: white;
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            width: 400px;
+        }
+        .formula {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+        }
+        .formula button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>公式复制工具</h1>
+        <div class="formula">
+            <span>成品计划数:</span>
+            <button onclick="copyToClipboard('=计划录入!I11*计划录入!J9-(D5*E5*F5+G5)*H5')">复制</button>
+        </div>
+        <div class="formula">
+            <span>半成品计划生产数:</span>
+            <button onclick='copyToClipboard("=CEILING((((IF(计划录入!Z10=\"N\",IF(计划录入!F9<20,(((计划录入!F9*0.02+计划录入!F9)*(计划录入!J9*计划录入!I11))/1000)+3,(((计划录入!F9+2)*计划录入!J9*计划录入!I11)/1000))+3,IF(计划录入!F9<20,(((((计划录入!F9*计划录入!Z10)*0.02)+(计划录入!F9*计划录入!Z10))*(计划录入!J9*计划录入!I11))/1000)+2,((((计划录入!F9*计划录入!Z10)+2)*(计划录入!J9*计划录入!I11))/1000)))+2)-I7)/H7),1)")'>复制</button>
+        </div>
+        <div class="formula">
+            <span>半成品出料数量:</span>
+            <button onclick="copyToClipboard('=ROUND((C7-I8)/(C7-(计划录入!F22/1000)),4)')">复制</button>
+        </div>
+        <div class="formula">
+            <span>半成品领用数量:</span>
+            <button onclick="copyToClipboard('=ROUND(1000*(C7-I10)/(计划录入!F10*计划录入!F11*H4),4)')">复制</button>
+        </div>
+        <div class="formula">
+            <span>原始计算结果:</span>
+            <button onclick='copyToClipboard("=IF(计划录入!Z10=\"N\",IF(计划录入!F9<20,(((计划录入!F9*0.02+计划录入!F9)*(计划录入!J9*计划录入!I11))/1000)+3,(((计划录入!F9+2)*计划录入!J9*计划录入!I11)/1000))+3,IF(计划录入!F9<20,(((((计划录入!F9*计划录入!Z10)*0.02)+(计划录入!F9*计划录入!Z10))*(计划录入!J9*计划录入!I11))/1000)+2,((((计划录入!F9*计划录入!Z10)+2)*(计划录入!J9*计划录入!I11))/1000)))+2")'>复制</button>
+        </div>
+    </div>
+
+    <script>
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert("内容已复制到剪贴板");
+            }).catch(err => {
+                console.error('无法复制文本: ', err);
+            });
+        }
+    </script>
+</body>
+</html>
