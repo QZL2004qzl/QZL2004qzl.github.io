@@ -95,11 +95,34 @@
     <script>
         const API_ENDPOINT = 'https://qwen-kimi-nbedcknrgl.cn-shanghai.fcapp.run/v1/chat/completions';
         const YOUR_AUTHORIZATION_TOKEN = 'Bearer reQU*tntMAHELF6sFvJ_vM4hYFQ8Itxp4GjwMETo952v4KbIrPe5SHLsYNCOhicr0';
-        const BASE_URL = 'http://sj11q9wtf.hn-bkt.clouddn.com/'; // 基础 URL
 
         document.getElementById('imageReviewButton').addEventListener('click', function() {
         document.getElementById('fileInput').click();
         });
+
+        async function uploadFileToFlask(file) {
+            const FLASK_APP_URL = 'https://dianshangpintai-dfhsf-tsblcuwsaj.cn-shanghai.fcapp.run/upload';
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch(FLASK_APP_URL, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+
+                const result = await response.json();
+                console.log('File uploaded successfully. URL:', result.url);
+                return result.url;
+            } catch (error) {
+                console.error('There was a problem with the file upload:', error);
+            }
+        }
 
         document.getElementById('fileInput').addEventListener('change', async function() {
             const file = this.files[0]; // 获取选择的文件
@@ -109,7 +132,7 @@
                 progressBar.max = 100;
                 document.body.appendChild(progressBar);
 
-                const fileUrl = await uploadFile(file, progressBar);
+                const fileUrl = await uploadFileToFlask(file);
                 await callApi(fileUrl);
 
                 progressBar.remove();
@@ -120,25 +143,6 @@
                 document.body.appendChild(img);
             }
         });
-
-        async function uploadFile(file, progressBar) {
-            const formData = new FormData();
-            formData.append('file', file);
-            formData.append('token', 'ETuG3zy4ww8NF-DqDDkY9_51kH6pKzcOXwD158ST:ihvUL1AcG85-ja5hyBVQfGZZi2c=:eyJzY29wZSI6InF6bDIwMDQiLCJkZWFkbGluZSI6Mzc3MjUwMzY4OTJ9');
-            formData.append('key', file.name);
-
-            const response = await fetch('http://up-z2.qiniup.com/', {
-                method: 'POST',
-                body: formData
-            });
-
-            if (!response.ok) {
-                throw new Error('File upload failed');
-            }
-
-            const result = await response.json();
-            return BASE_URL + result.key; // 拼接完整的 URL
-        }
         const propmt = `化妆品是指以涂擦、喷洒或者其他类似方法，施用于皮肤、毛发、指甲、口唇等人体表面，以清洁、保护、美化、修饰为目的的日用化学工业产品，其作用温和，只是起到辅助作用。对于具有夸大效果、明示或暗示具有医疗作用、或者颇具煽动性的宣传用语，消费者应理性对待。
 
 　　根据《化妆品标识管理规定》《化妆品命名规定》《化妆品命名指南》等文件要求，化妆品宣称用语应根据其语言环境来确定，禁止表达的词意或使用的词语包括但不限于以下词语：
@@ -189,15 +193,14 @@
  Skills: 法律知识、化妆品行业知识、语言表达能力。
 
 ##输出格式
-Examples：图片描述：对整张图片做的描述
+Examples：图片描述：对整张图片做描述
           判断：不符合
-          解释：如果不符合就输出给出不符合合理的详细解释。要解释为什么不符合，哪里不符合，怎样不符合。要详细通俗易懂
+          解释：如果不符合就输出给出不符合合理的详细解释。要解释为什么不符合，哪里不符合，怎样不符合。
 
           建议：
-              要以专业的广告设计师和根据化妆品法律法规的要求，向用户提出完整且详细的修改设计建议，建议修改设计要有很强的审美能力
+              要以专业的广告设计师角色和根据化妆品法律法规的要求，向用户提出完整且详细的修改设计建议，建议修改设计要有很强的审美能力
 ##
 注意输出格式一定要美观
-
 `
         async function callApi(fileUrl) {
             try {
